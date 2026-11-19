@@ -34,6 +34,7 @@ declare type User = {
   firstName: string;
   lastName: string;
   name: string;
+  name: string;
   address1: string;
   city: string;
   state: string;
@@ -92,12 +93,7 @@ declare type Bank = {
   shareableId: string;
 };
 
-declare type AccountTypes =
-  | "depository"
-  | "credit"
-  | "loan "
-  | "investment"
-  | "other";
+declare type AccountTypes = "depository" | "credit" | "loan " | "investment" | "other";
 
 declare type Category = "Food and Drink" | "Travel" | "Transfer";
 
@@ -211,7 +207,7 @@ declare interface TotalBalanceBoxProps {
 
 declare interface FooterProps {
   user: User;
-  type?: 'mobile' | 'desktop'
+  type?: "mobile" | "desktop";
 }
 
 declare interface RightSidebarProps {

@@ -179,18 +179,38 @@ export const getTransactionStatus = (date: Date) => {
   return date > twoDaysAgo ? "Processing" : "Success";
 };
 
-export const authFormSchema = (type: string) =>
-  z.object({
-    // sign up
-    firstName: type === "sign-in" ? z.string().optional() : z.string().min(3),
-    lastName: type === "sign-in" ? z.string().optional() : z.string().min(3),
-    address1: type === "sign-in" ? z.string().optional() : z.string().max(50),
-    city: type === "sign-in" ? z.string().optional() : z.string().max(50),
-    state: type === "sign-in" ? z.string().optional() : z.string().min(2).max(2),
-    postalCode: type === "sign-in" ? z.string().optional() : z.string().min(3).max(6),
-    dateOfBirth: type === "sign-in" ? z.string().optional() : z.string().min(3),
-    ssn: type === "sign-in" ? z.string().optional() : z.string().min(3),
-    // both
-    email: z.string().email(),
-    password: z.string().min(8),
-  });
+export const auth_signUpSchema = z.object({
+  // sign up
+  firstName: z.string().min(3),
+  lastName: z.string().min(3),
+  address1: z.string().max(50),
+  city: z.string().max(50),
+  state: z.string().min(3),
+  postalCode: z.string().min(3).max(6),
+  dateOfBirth: z.string().min(3),
+  ssn: z.string().min(3),
+  // both
+  email: z.string().email(),
+  password: z
+    .string()
+    .min(8)
+    .regex(/[A-Z]/, "Must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Must contain at least one number")
+    .regex(/[^A-Za-z0-9]/, "Must contain at least one special character"),
+});
+
+export const auth_signInSchema = z.object({
+  email: z.string().email(),
+  password: z
+    .string()
+    .min(5, "Password must be more than 5 characters")
+    .regex(/[A-Z]/, "Must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Must contain at least one number")
+    .regex(/[^A-Za-z0-9]/, "Must contain at least one special character"),
+});
+
+export type SignInFormValues = z.infer<typeof auth_signInSchema>;
+
+export type SignUpFormValues = z.infer<typeof auth_signUpSchema>;

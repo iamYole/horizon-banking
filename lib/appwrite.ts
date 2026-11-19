@@ -1,33 +1,39 @@
-"use server";
-
-import { Client, Account, Databases, Users } from "node-appwrite";
+import "server-only";
+import { Client, Account, Users, Databases } from "node-appwrite";
 import { cookies } from "next/headers";
-
-export async function createSessionClient() {
-  const client = new Client()
-    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
-    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!);
-
-  const session = cookies().get("appwrite-session");
-
-  if (!session || !session.value) {
-    throw new Error("No session");
-  }
-
-  client.setSession(session.value);
-
-  return {
-    get account() {
-      return new Account(client);
-    },
-  };
-}
 
 export async function createAdminClient() {
   const client = new Client()
     .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
     .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!)
-    .setKey(process.env.NEXT_APPWRITE_KEY!);
+    .setKey(process.env.APPWRITE_SECRET!);
+
+  return {
+    get account() {
+      return new Account(client);
+    },
+    get users() {
+      return new Users(client);
+    },
+    // get database() {
+    //   return new Databases(client);
+    // },
+  };
+}
+
+export async function createSessionClient() {
+  const cookieStore = await cookies();
+
+  const session = cookieStore.get("appwrite-session");
+
+  if (!session?.value) {
+    throw new Error("No active session");
+  }
+
+  const client = new Client()
+    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
+    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!)
+    .setSession(session.value);
 
   return {
     get account() {
@@ -36,9 +42,5 @@ export async function createAdminClient() {
     get database() {
       return new Databases(client);
     },
-    get user() {
-      return new Users(client);
-    }
   };
 }
-

@@ -185,7 +185,7 @@ export const auth_signUpSchema = z.object({
   lastName: z.string().min(3),
   address1: z.string().max(50),
   city: z.string().max(50),
-  state: z.string().min(3),
+  state: z.string().max(2),
   postalCode: z.string().min(3).max(6),
   dateOfBirth: z.string().min(3),
   ssn: z.string().min(3),

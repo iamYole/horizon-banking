@@ -13,6 +13,7 @@ import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { SignUpFormField } from "./CustomFormField";
 import { useRouter } from "next/navigation";
+import PlaidLink from "./PlaidLink";
 
 function SignUpAuthForm({ type }: { type: string }) {
   const [user, setUser] = useState(null);
@@ -67,7 +68,9 @@ function SignUpAuthForm({ type }: { type: string }) {
         </div>
       </header>
       {user ? (
-        <div className="flex flex-col flex-4">{/* PLAID LINK */}</div>
+        <div className="flex flex-col flex-4">
+          <PlaidLink user={user} variant="primary" />
+        </div>
       ) : (
         <>
           <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
